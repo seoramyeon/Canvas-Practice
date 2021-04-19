@@ -3,11 +3,17 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let particleArray = [];
-let adjustX = 5;
-let adjustY = 5;
+let adjustX = 15;
+let adjustY = 15;
 
 //handle mouse
 const mouse = {
+  x: null,
+  y: null,
+  radius: 50,
+};
+
+const touch = {
   x: null,
   y: null,
   radius: 50,
@@ -19,10 +25,16 @@ window.addEventListener('mousemove', (event) => {
   // console.log('mouse.x, mouse.y :', mouse.x, mouse.y);
 });
 
+window.addEventListener('touchmove', (event) => {
+  touch.x = event.x;
+  touch.y = event.y;
+  // console.log('mouse.x, mouse.y :', mouse.x, mouse.y);
+});
+
 ctx.fillStyle = 'white';
-ctx.font = '20px Roboto';
+ctx.font = '1em Roboto';
 ctx.fillText('THΞGRΛP', 5, 30);
-const textCoordinates = ctx.getImageData(0, 0, 140, 140);
+const textCoordinates = ctx.getImageData(0, 0, 100, 100);
 
 class Particle {
   constructor(x, y) {
@@ -48,8 +60,8 @@ class Particle {
   }
 
   update() {
-    let dx = mouse.x - this.x;
-    let dy = mouse.y - this.y;
+    let dx = mouse.x - this.x || touch.x - this.x;
+    let dy = mouse.y - this.y || touch.y - this.y;
     let distance = Math.sqrt(dx * dx + dy * dy);
 
     let forceDirectionX = dx / distance;
