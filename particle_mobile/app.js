@@ -1,10 +1,34 @@
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-let particleArray = [];
-let adjustX = 15;
-let adjustY = 15;
+// const canvas = document.querySelector('canvas');
+// const ctx = canvas.getContext('2d');
+
+let canvas;
+let canvasWidth;
+let ctx;
+
+let particleArray;
+let adjustX;
+let adjustY;
+
+function initSize() {
+  canvas = document.getElementById('canvas');
+  if (canvas.getContext) {
+    ctx = canvas.getContext('2d');
+
+    window.addEventListener('resize', resizeCanvas, false);
+    window.addEventListener('orientationchange', resizeCanvas, false);
+    resizeCanvas();
+  }
+}
+initSize();
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  particleArray = [];
+  adjustX = 10;
+  adjustY = 10;
+}
 
 //handle mouse
 const mouse = {
@@ -16,7 +40,7 @@ const mouse = {
 const touch = {
   x: null,
   y: null,
-  radius: 50,
+  radius: 100,
 };
 
 window.addEventListener('mousemove', (event) => {
@@ -25,14 +49,20 @@ window.addEventListener('mousemove', (event) => {
   // console.log('mouse.x, mouse.y :', mouse.x, mouse.y);
 });
 
-window.addEventListener('touchmove', (event) => {
+canvas.addEventListener('touchstart', (event) => {
+  touch.x = event.x;
+  touch.y = event.y;
+  // console.log('mouse.x, mouse.y :', mouse.x, mouse.y);
+});
+
+canvas.addEventListener('touchmove', (event) => {
   touch.x = event.x;
   touch.y = event.y;
   // console.log('mouse.x, mouse.y :', mouse.x, mouse.y);
 });
 
 ctx.fillStyle = 'white';
-ctx.font = '1.4em Roboto';
+ctx.font = '2vw Roboto';
 ctx.fillText('THΞGRΛP', 0, 20);
 const textCoordinates = ctx.getImageData(0, 0, 150, 150);
 
@@ -47,12 +77,7 @@ class Particle {
   }
 
   draw() {
-    // let lineargradient = ctx.createLinearGradient(1, 1, 5, 5);
-    // lineargradient.addColorStop(0, 'white');
-    // lineargradient.addColorStop(1, 'red');
-
     ctx.fillStyle = 'white';
-    // ctx.fillStyle = lineargradient;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.closePath();
@@ -83,6 +108,7 @@ class Particle {
   }
 }
 console.log('textCoordinates :', textCoordinates);
+
 function init() {
   particleArray = [];
 
@@ -97,14 +123,6 @@ function init() {
       }
     }
   }
-  // i < 파티클의 수
-  // for (let i = 0; i < 3000; i++) {
-  //   let x = Math.random() * canvas.width;
-  //   let y = Math.random() * canvas.height;
-  //   particleArray.push(new Particle(x, y));
-  // }
-  // particleArray.push(new Particle(200, 250)); 픽스값
-  // particleArray.push(new Particle(300, 350));
 }
 init();
 console.log('particleArray :', particleArray);
@@ -118,9 +136,3 @@ function animate() {
   requestAnimationFrame(animate);
 }
 animate();
-
-function connet() {
-  // for(let a =0; a < particleArray.length; a++) {
-  //   for(let b )
-  // }
-}
